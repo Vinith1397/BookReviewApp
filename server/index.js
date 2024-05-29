@@ -69,7 +69,7 @@ app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT
 
 */
 
-const express = require('express');
+/*const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const cors = require('cors');
@@ -122,4 +122,31 @@ app.get('*', (req, res) => {
 // Use the PORT environment variable provided by Heroku
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+*/
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const customer_routes = require('./router/auth_users.js').authenticated;
+const genl_routes = require('./router/general.js').general;
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+app.use("/customer", customer_routes);
+app.use("/", genl_routes);
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// Use the PORT environment variable provided by Heroku
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
 
