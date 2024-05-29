@@ -7,7 +7,7 @@ function BookList({ token }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080')
+    axios.get('https://book-review-app-467a5a193d3e.herokuapp.com/')
       .then(response => {
         setBooks(response.data);
         setLoading(false);
